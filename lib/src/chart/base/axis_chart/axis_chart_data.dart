@@ -7,6 +7,8 @@ import 'package:fl_chart/src/chart/base/axis_chart/axis_chart_painter.dart';
 import 'package:fl_chart/src/utils/lerp.dart';
 import 'package:flutter/material.dart' hide Image;
 
+typedef ScrollOffsetChangeCallback = void Function(double scrollOffset);
+
 /// This is the base class for axis base charts data
 /// that contains a [FlGridData] that holds data for showing grid lines,
 /// also we have [minX], [maxX], [minY], [maxY] values
@@ -29,6 +31,8 @@ abstract class AxisChartData extends BaseChartData with EquatableMixin {
     super.borderData,
     required super.touchData,
     ExtraLinesData? extraLinesData,
+    this.horizontalZoomConfig = const ZoomConfig(),
+    this.onScrollOffsetChanged,
   })  : gridData = gridData ?? const FlGridData(),
         rangeAnnotations = rangeAnnotations ?? const RangeAnnotations(),
         baselineX = baselineX ?? 0,
@@ -61,6 +65,10 @@ abstract class AxisChartData extends BaseChartData with EquatableMixin {
 
   /// Extra horizontal or vertical lines to draw on the chart.
   final ExtraLinesData extraLinesData;
+
+  final ZoomConfig horizontalZoomConfig;
+
+  final ScrollOffsetChangeCallback? onScrollOffsetChanged;
 
   /// Used for equality check, see [EquatableMixin].
   @override
@@ -1619,5 +1627,21 @@ class FlDotCrossPainter extends FlDotPainter {
         color,
         size,
         width,
+      ];
+}
+
+class ZoomConfig with EquatableMixin {
+  const ZoomConfig({
+    this.enabled = false,
+    this.amount = 10,
+  });
+
+  final bool enabled;
+  final double amount;
+
+  @override
+  List<Object?> get props => [
+        enabled,
+        amount,
       ];
 }

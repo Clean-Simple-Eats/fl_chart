@@ -39,6 +39,8 @@ class BarChartData extends AxisChartData with EquatableMixin {
     BarChartAlignment? alignment,
     FlTitlesData? titlesData,
     BarTouchData? barTouchData,
+    double? maxX,
+    double? minX,
     double? maxY,
     double? minY,
     super.baselineY,
@@ -47,6 +49,8 @@ class BarChartData extends AxisChartData with EquatableMixin {
     RangeAnnotations? rangeAnnotations,
     super.backgroundColor,
     ExtraLinesData? extraLinesData,
+    super.horizontalZoomConfig,
+    super.onScrollOffsetChanged,
   })  : barGroups = barGroups ?? const [],
         groupsSpace = groupsSpace ?? 16,
         alignment = alignment ?? BarChartAlignment.spaceEvenly,
@@ -60,8 +64,8 @@ class BarChartData extends AxisChartData with EquatableMixin {
           rangeAnnotations: rangeAnnotations ?? const RangeAnnotations(),
           touchData: barTouchData ?? BarTouchData(),
           extraLinesData: extraLinesData ?? const ExtraLinesData(),
-          minX: 0,
-          maxX: 1,
+          minX: minX ?? 0,
+          maxX: maxX ?? 1,
           maxY: maxY ?? double.nan,
           minY: minY ?? double.nan,
         );
@@ -89,11 +93,15 @@ class BarChartData extends AxisChartData with EquatableMixin {
     BarTouchData? barTouchData,
     FlGridData? gridData,
     FlBorderData? borderData,
+    double? maxX,
+    double? minX,
     double? maxY,
     double? minY,
     double? baselineY,
     Color? backgroundColor,
     ExtraLinesData? extraLinesData,
+    ZoomConfig? horizontalZoomConfig,
+    ScrollOffsetChangeCallback? onScrollOffsetChanged,
   }) {
     return BarChartData(
       barGroups: barGroups ?? this.barGroups,
@@ -104,11 +112,16 @@ class BarChartData extends AxisChartData with EquatableMixin {
       barTouchData: barTouchData ?? this.barTouchData,
       gridData: gridData ?? this.gridData,
       borderData: borderData ?? this.borderData,
+      maxX: maxX ?? this.maxX,
+      minX: minX ?? this.minX,
       maxY: maxY ?? this.maxY,
       minY: minY ?? this.minY,
       baselineY: baselineY ?? this.baselineY,
       backgroundColor: backgroundColor ?? this.backgroundColor,
       extraLinesData: extraLinesData ?? this.extraLinesData,
+      horizontalZoomConfig: horizontalZoomConfig ?? this.horizontalZoomConfig,
+      onScrollOffsetChanged:
+          onScrollOffsetChanged ?? this.onScrollOffsetChanged,
     );
   }
 
@@ -132,6 +145,7 @@ class BarChartData extends AxisChartData with EquatableMixin {
         backgroundColor: Color.lerp(a.backgroundColor, b.backgroundColor, t),
         extraLinesData:
             ExtraLinesData.lerp(a.extraLinesData, b.extraLinesData, t),
+        horizontalZoomConfig: b.horizontalZoomConfig,
       );
     } else {
       throw Exception('Illegal State');
@@ -146,6 +160,8 @@ class BarChartData extends AxisChartData with EquatableMixin {
         alignment,
         titlesData,
         barTouchData,
+        maxX,
+        minX,
         maxY,
         minY,
         baselineY,
@@ -154,6 +170,8 @@ class BarChartData extends AxisChartData with EquatableMixin {
         rangeAnnotations,
         backgroundColor,
         extraLinesData,
+        horizontalZoomConfig,
+        onScrollOffsetChanged,
       ];
 }
 

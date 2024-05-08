@@ -604,41 +604,48 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
       final groupBarPos = _groupBarsPosition![i];
       for (var j = 0; j < groupBarPos.barsX.length; j++) {
         final barX = groupBarPos.barsX[j];
-        final barWidth = targetData.barGroups[i].barRods[j].width;
+        final barRod = targetData.barGroups[i].barRods[j];
+        final barWidth = barRod.width;
         final halfBarWidth = barWidth / 2;
+        final borderRadius =
+            barRod.borderRadius ?? BorderRadius.circular(halfBarWidth);
+        final cornerHeight =
+            max(borderRadius.topLeft.y, borderRadius.topRight.y) +
+                max(borderRadius.bottomLeft.y, borderRadius.bottomRight.y);
 
         double barTopY;
         double barBotY;
 
         final isUpward = targetData.barGroups[i].barRods[j].isUpward();
         if (isUpward) {
-          barTopY = getPixelY(
-            targetData.barGroups[i].barRods[j].toY,
+          barBotY = getPixelY(
+            barRod.fromY + barRod.backDrawRodData.fromY,
             viewSize,
             holder,
           );
-          barBotY = getPixelY(
-            targetData.barGroups[i].barRods[j].fromY +
-                targetData.barGroups[i].barRods[j].backDrawRodData.fromY,
-            viewSize,
-            holder,
+          barTopY = min(
+            getPixelY(
+              barRod.toY,
+              viewSize,
+              holder,
+            ),
+            barBotY - cornerHeight,
           );
         } else {
           barTopY = getPixelY(
-            targetData.barGroups[i].barRods[j].fromY +
-                targetData.barGroups[i].barRods[j].backDrawRodData.fromY,
+            barRod.fromY + barRod.backDrawRodData.fromY,
             viewSize,
             holder,
           );
           barBotY = getPixelY(
-            targetData.barGroups[i].barRods[j].toY,
+            barRod.toY,
             viewSize,
             holder,
           );
         }
 
         final backDrawBarY = getPixelY(
-          targetData.barGroups[i].barRods[j].backDrawRodData.toY,
+          barRod.backDrawRodData.toY,
           viewSize,
           holder,
         );
@@ -680,8 +687,17 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
           final nearestBarRod = nearestGroup.barRods[j];
           final nearestSpot =
               FlSpot(nearestGroup.x.toDouble(), nearestBarRod.toY);
-          final nearestSpotPos =
-              Offset(barX, getPixelY(nearestSpot.y, viewSize, holder));
+          final nearestSpotPos = Offset(
+            barX,
+            min(
+              getPixelY(
+                nearestSpot.y,
+                viewSize,
+                holder,
+              ),
+              barTopY,
+            ),
+          );
 
           var touchedStackIndex = -1;
           BarChartRodStackItem? touchedStack;
