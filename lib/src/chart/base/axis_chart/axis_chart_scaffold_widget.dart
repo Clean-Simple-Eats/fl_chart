@@ -234,10 +234,10 @@ class _AxisChartHorizontalClipper extends CustomClipper<Rect> {
     var horizontalPadding = 0.0;
 
     if (leftAxisTitle.showSideTitles) {
-      horizontalPadding += leftAxisTitle.totalReservedSize;
+      horizontalPadding += leftAxisTitle.totalReservedSize - 8;
     }
     if (rightAxisTitle.showSideTitles) {
-      horizontalPadding += rightAxisTitle.totalReservedSize;
+      horizontalPadding += rightAxisTitle.totalReservedSize - 8;
     }
 
     return Rect.fromLTWH(
