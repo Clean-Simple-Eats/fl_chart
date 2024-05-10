@@ -623,14 +623,16 @@ class BarChartPainter extends AxisChartPainter<BarChartData> {
             viewSize,
             holder,
           );
-          barTopY = min(
-            getPixelY(
-              barRod.toY,
-              viewSize,
-              holder,
-            ),
-            barBotY - cornerHeight,
-          );
+          barTopY = barRod.toY == 0
+              ? barBotY
+              : min(
+                  getPixelY(
+                    barRod.toY,
+                    viewSize,
+                    holder,
+                  ),
+                  barBotY - cornerHeight,
+                );
         } else {
           barTopY = getPixelY(
             barRod.fromY + barRod.backDrawRodData.fromY,
