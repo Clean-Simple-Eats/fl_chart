@@ -48,6 +48,21 @@ class _AxisChartScaffoldWidgetState extends State<AxisChartScaffoldWidget> {
   }
 
   @override
+  void didUpdateWidget(covariant AxisChartScaffoldWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (widget.data == oldWidget.data) {
+      return;
+    }
+
+    if (!scrollController.hasClients) {
+      return;
+    }
+
+    scrollController.jumpTo(scrollController.offset);
+  }
+
+  @override
   void dispose() {
     scrollController.dispose();
     super.dispose();
