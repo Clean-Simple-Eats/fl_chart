@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fl_chart/src/chart/base/axis_chart/axis_chart_helper.dart';
 import 'package:fl_chart/src/chart/base/axis_chart/side_titles/side_titles_flex.dart';
@@ -28,9 +30,9 @@ class SideTitlesWidget extends StatelessWidget {
 
   bool get isVertical => !isHorizontal;
 
-  double get minX => axisMinOverride ?? axisChartData.minX;
+  double get minX => axisChartData.minX;
 
-  double get maxX => axisMaxOverride ?? axisChartData.maxX;
+  double get maxX => axisChartData.maxX;
 
   double get baselineX => axisChartData.baselineX;
 
@@ -149,7 +151,7 @@ class SideTitlesWidget extends StatelessWidget {
         interval: interval,
       );
       axisPositions = axisValues.map((axisValue) {
-        final axisDiff = axisMax - axisMin;
+        final axisDiff = xAxisZoom.enabled ? axisMax : axisMax - axisMin;
         var portion = 0.0;
         if (axisDiff > 0) {
           portion = (axisValue - axisMin) / axisDiff;
@@ -157,7 +159,9 @@ class SideTitlesWidget extends StatelessWidget {
         if (isVertical) {
           portion = 1 - portion;
         }
-        final axisLocation = portion * axisViewSize;
+        final axisLocation = xAxisZoom.enabled && isHorizontal
+            ? portion * max(axisViewSize, axisMax)
+            : portion * axisViewSize;
         return AxisSideTitleMetaData(axisValue, axisLocation);
       }).toList();
     }
