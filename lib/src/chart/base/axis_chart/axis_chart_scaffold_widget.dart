@@ -40,10 +40,8 @@ class _AxisChartScaffoldWidgetState extends State<AxisChartScaffoldWidget> {
 
   @override
   void initState() {
-    scrollController = ScrollController()
-      ..addListener(() {
-        widget.data.onScrollOffsetChanged?.call(scrollController.offset);
-      });
+    scrollController =
+        widget.data.horizontalZoomConfig.scrollController ?? ScrollController();
     super.initState();
   }
 
@@ -64,7 +62,9 @@ class _AxisChartScaffoldWidgetState extends State<AxisChartScaffoldWidget> {
 
   @override
   void dispose() {
-    scrollController.dispose();
+    if (widget.data.horizontalZoomConfig.scrollController == null) {
+      scrollController.dispose();
+    }
     super.dispose();
   }
 
